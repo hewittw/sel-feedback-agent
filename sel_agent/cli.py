@@ -1,9 +1,11 @@
 """Terminal interface. All discussion logic lives in session.py."""
+import argparse
 import sys
 import textwrap
 
 from .claude_client import ClaudeClient
 from .modes import load_prompt_config
+from .question_bank import load_question_bank
 from .scenarios import ConfigError, load_scenarios
 from .session import DiscussionSession, QuestionError
 from .settings import load_settings
@@ -81,11 +83,27 @@ def run_session(session: DiscussionSession) -> None:
         print(f"(Session log: {session.log.path})")
 
 
-def main() -> int:
+def parse_args(argv):
+    p = argparse.ArgumentParser(description="Parent-child SEL discussion agent.")
+    p.add_argument("det", nargs="?", choices=["det"],
+                   help="deterministic mode: pick questions from config/question_bank.json instead of generating them")
+    p.add_argument("--det", dest="det_flag", action="store_true", help="same as 'det'")
+    p.add_argument("--seed", type=int, help="seed for question picks in det mode (reproducible sessions)")
+    a = p.parse_args(argv)
+    a.det = bool(a.det or a.det_flag)
+    return a
+
+
+def main(argv=None) -> int:
+    args = parse_args(sys.argv[1:] if argv is None else argv)
     settings = load_settings()
+    bank = None
     try:
         config = load_prompt_config(settings.prompts_dir, settings.config_dir / "modes.json")
         scenarios = load_scenarios(settings.config_dir / "scenarios.json")
+        if args.det:
+            bank = load_question_bank(settings.config_dir / "question_bank.json",
+                                      [s.id for s in scenarios], list(config.modes))
     except ConfigError as e:
         print(f"Startup failed.\n{e}", file=sys.stderr)
         return 2
@@ -97,10 +115,13 @@ def main() -> int:
     client = ClaudeClient(settings.api_key, settings.model)
     print("Parent-Child Story Discussion")
     print(f"({settings.rounds} rounds per scenario. In a scenario, {EXIT_CMD} returns here, {QUIT_CMD} quits.)")
+    if args.det:
+        print("[det mode: questions come from config/question_bank.json]")
     try:
         while True:
             scenario = choose_scenario(scenarios)
-            session = DiscussionSession(client, config, scenario, settings.rounds, settings.logs_dir, settings.model)
+            session = DiscussionSession(client, config, scenario, settings.rounds, settings.logs_dir, settings.model,
+                                        bank=bank, seed=args.seed)
             run_session(session)   # its finally-block closes the log on /exit, /quit or Ctrl-C
     except (QuitApp, KeyboardInterrupt):
         print("\nGoodbye!")

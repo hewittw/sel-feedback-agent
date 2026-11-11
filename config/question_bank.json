@@ -1,0 +1,116 @@
+{
+  "_comment": "Used only with --det. For every scenario, each mode in modes.json needs a list of questions. An entry is either a plain string (standard complexity and length) or an object {\"text\": ..., \"complexity\": \"simpler|standard|more_challenging\", \"length\": \"shorter|standard|longer\"}. Questions whose tags match the current style preferences are preferred.",
+  "scenarios": {
+    "left_out_game": {
+      "normal": [
+        "What do you think was the most important moment in this story?",
+        "What surprised you most about what happened at recess?",
+        "What do you think should happen next in this story?",
+        {"text": "What happened to Maya at recess?", "complexity": "simpler", "length": "shorter"},
+        {"text": "Why do you think Maya didn't tell anyone how she felt about what happened at recess?", "complexity": "more_challenging"}
+      ],
+      "feelings": [
+        "How do you think Maya felt when Leo said they already had enough people?",
+        "How do you think Maya felt when she saw another kid join the game without asking?",
+        "Why do you think Maya didn't want to go to recess the next day?",
+        {"text": "How did Maya feel on the bench?", "complexity": "simpler", "length": "shorter"},
+        {"text": "How might Maya's feelings change if someone came over to sit with her?", "complexity": "more_challenging"}
+      ],
+      "perspective_taking": [
+        "Why do you think Leo said they already had enough people?",
+        "What do you think the kid who joined without asking was thinking?",
+        "How do you think the other kids playing tag saw what happened?",
+        {"text": "Why did Leo say no?", "complexity": "simpler", "length": "shorter"},
+        {"text": "If Leo knew how Maya felt the next day, what do you think he would think about what he said?", "complexity": "more_challenging", "length": "longer"}
+      ],
+      "personal_experience": [
+        "Can you think of a time when you felt left out of a game or group?",
+        "Have you ever seen someone get left out, like Maya did?",
+        "What helps you feel better when you've been left out?",
+        {"text": "Has anyone ever said no when you asked to play?", "complexity": "simpler", "length": "shorter"},
+        {"text": "When have you been the one deciding who gets to join a game or group?", "complexity": "more_challenging"}
+      ],
+      "problem_solving": [
+        "What could Maya do the next time she wants to join a game?",
+        "What could Leo have said instead of 'we already have enough people'?",
+        "What might happen if Maya told a teacher how she felt?",
+        {"text": "What could Maya do now?", "complexity": "simpler", "length": "shorter"},
+        {"text": "If Maya invited other kids on the bench to start a new game, what might happen next?", "complexity": "more_challenging", "length": "longer"}
+      ]
+    },
+    "friend_disagreement": {
+      "normal": [
+        "What do you think was the biggest problem in this story?",
+        "What do you think will happen the next time Sam and Priya work together?",
+        "Which part of this story felt the most real to you?",
+        {"text": "What happened with the poster?", "complexity": "simpler", "length": "shorter"},
+        {"text": "Why do you think finishing the poster alone didn't feel as fun as Sam expected?", "complexity": "more_challenging"}
+      ],
+      "feelings": [
+        "How do you think Priya felt when she said 'Fine, do whatever you want'?",
+        "How do you think Sam felt while he finished the rocket alone?",
+        "Why do you think the poster didn't feel as fun for Sam at the end?",
+        {"text": "How did Priya feel?", "complexity": "simpler", "length": "shorter"},
+        {"text": "How might Sam and Priya each feel the next time they see the poster at the fair?", "complexity": "more_challenging"}
+      ],
+      "perspective_taking": [
+        "Why do you think Priya wanted to draw the ocean so much?",
+        "What do you think Priya meant when she said 'Fine, do whatever you want'?",
+        "How do you think Sam saw the argument?",
+        {"text": "Why did Priya stop helping?", "complexity": "simpler", "length": "shorter"},
+        {"text": "What do you think each friend wished the other one understood about the poster?", "complexity": "more_challenging"}
+      ],
+      "personal_experience": [
+        "Can you think of a time you and a friend wanted to do something different ways?",
+        "Have you ever said 'fine' when you didn't really feel fine?",
+        "What do you usually do when you disagree with a friend?",
+        {"text": "Have you ever argued with a friend?", "complexity": "simpler", "length": "shorter"},
+        {"text": "When did you and someone else find a way to combine both of your ideas?", "complexity": "more_challenging"}
+      ],
+      "problem_solving": [
+        "What could Sam and Priya have done to include both of their ideas?",
+        "What could Sam say to Priya now?",
+        "What might happen if Sam asked Priya to help finish the poster?",
+        {"text": "How could they fix this?", "complexity": "simpler", "length": "shorter"},
+        {"text": "If they had to make another poster together next week, what could they agree on before they start?", "complexity": "more_challenging", "length": "longer"}
+      ]
+    },
+    "frustrated_teamwork": {
+      "normal": [
+        "What do you think was the turning point in this story?",
+        "What do you think the group should do with the ten minutes left?",
+        "What part of this story stood out to you most?",
+        {"text": "What happened to the tower?", "complexity": "simpler", "length": "shorter"},
+        {"text": "Why do you think the group went quiet after Jordan knocked the cups down?", "complexity": "more_challenging"}
+      ],
+      "feelings": [
+        "How do you think Jordan felt after the tower fell for the third time?",
+        "How do you think Ava felt when Jordan knocked the cups down?",
+        "Why do you think Jordan got so frustrated?",
+        {"text": "How did Jordan feel?", "complexity": "simpler", "length": "shorter"},
+        {"text": "How do you think Jordan felt a minute after he said 'This is stupid'?", "complexity": "more_challenging"}
+      ],
+      "perspective_taking": [
+        "What do you think Ava was thinking when the group went quiet?",
+        "How do you think the other teammates saw what Jordan did?",
+        "What do you think the teacher was hoping the group would do?",
+        {"text": "What was Ava thinking?", "complexity": "simpler", "length": "shorter"},
+        {"text": "Why might Jordan's frustration look different to his teammates than it felt to him?", "complexity": "more_challenging"}
+      ],
+      "personal_experience": [
+        "Can you think of a time when you got really frustrated while working on something?",
+        "What do you do when something you're building keeps going wrong?",
+        "Have you ever been on a team where someone got upset?",
+        {"text": "What makes you frustrated?", "complexity": "simpler", "length": "shorter"},
+        {"text": "When has getting frustrated changed how a group project went for you?", "complexity": "more_challenging"}
+      ],
+      "problem_solving": [
+        "What could Jordan do when he starts to feel frustrated?",
+        "What could Jordan say to Ava now?",
+        "What could the group try differently to keep the tower from falling?",
+        {"text": "What could Jordan do now?", "complexity": "simpler", "length": "shorter"},
+        {"text": "If the group took a short break before trying again, how might that change what happens in the last ten minutes?", "complexity": "more_challenging", "length": "longer"}
+      ]
+    }
+  }
+}

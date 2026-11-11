@@ -29,6 +29,27 @@ round you return to the menu.
 | `/quit` | anywhere | quit the app (Ctrl-C and Ctrl-D also quit) |
 | `q` | scenario menu | quit |
 
+### Deterministic mode (`det`)
+
+```bash
+.venv/bin/python main.py det            # or: --det
+.venv/bin/python main.py det --seed 7   # same seed + same feedback = same questions
+```
+Questions are **picked** from `config/question_bank.json` instead of being generated. Each scenario
+has its own buckets, and each bucket holds a list of pre-written follow-up questions. Each round
+picks one question at random from the active bucket and never asks the same question twice in a
+session. Everything else is unchanged: feedback is still interpreted by Claude and still switches
+buckets and style.
+- **Style:** a bank entry can be tagged `{"text": ..., "complexity": "simpler", "length": "shorter"}`.
+  Untagged entries count as standard. Picks prefer questions whose tags match the current
+  preferences, and a preference the participant asked for outranks a default.
+- **Running out:** when a bucket is used up, the question comes from `normal`, then from any bucket
+  with questions left, and only then is a question repeated. Each fallback is logged as `bank_fallback`.
+- **Checks at startup:** every scenario must have a non-empty list for every mode in `modes.json`.
+  So adding a bucket in det mode also means adding questions for it in the bank.
+- **Log:** `question_source: "bank"`, plus, for each round, which bucket the question came from,
+  its tags, the candidate list and any fallback.
+
 If question generation fails, press Enter to retry or type `m` to return to the menu. The round
 does not advance.
 
@@ -92,7 +113,9 @@ Offline checks (no API key or cost):
 ```bash
 .venv/bin/python -m unittest discover tests
 ```
-There are 15 tests. They cover:
+There are 23 tests. The 8 in `tests/test_question_bank.py` cover det mode: picking from the active
+bucket with no question API calls, style tags, no repeats, fallback, same seed giving the same
+questions, and bank validation. The other 15 cover:
 - a new session starts in normal mode
 - topic feedback selects a bucket
 - style-only updates keep the mode, and missing fields keep their values

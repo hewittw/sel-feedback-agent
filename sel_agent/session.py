@@ -8,6 +8,7 @@ A UI (terminal now; tablet, voice or robot later) drives it like this:
         s.submit_feedback(text)      # "" is fine
     s.end(completed=True)
 """
+import random
 import uuid
 from datetime import datetime
 
@@ -28,8 +29,13 @@ class QuestionError(Exception):
 
 
 class DiscussionSession:
-    def __init__(self, client, config: PromptConfig, scenario: Scenario, rounds: int, logs_dir, model=None):
+    def __init__(self, client, config: PromptConfig, scenario: Scenario, rounds: int, logs_dir, model=None,
+                 bank=None, seed=None):
+        """bank: a QuestionBank -> deterministic mode (--det): questions are picked, not generated.
+        seed: makes the random picks reproducible."""
         self.client = client
+        self.bank = bank
+        self.rng = random.Random(seed)
         self.config = config
         self.scenario = scenario
         self.total_rounds = rounds
@@ -39,7 +45,8 @@ class DiscussionSession:
         self.round = 0              # number of the round in progress (1-based); 0 = not started
         self.phase = "question"     # question -> answer -> feedback -> question ...
         self.session_id = datetime.now().strftime("%Y%m%d-%H%M%S-") + uuid.uuid4().hex[:6]
-        self.log = SessionLog(logs_dir, self.session_id, scenario, rounds, model)
+        self.log = SessionLog(logs_dir, self.session_id, scenario, rounds, model,
+                              question_source="bank" if bank else "llm", seed=seed)
         self._entry: dict | None = None
 
     @property
@@ -50,13 +57,21 @@ class DiscussionSession:
         assert self.phase == "question" and not self.finished
         round_number = self.round + 1
         mode = select_mode(self.state, self.config)
-        system, user = build_question_request(self.config, mode, self.state, self.scenario, self.questions,
-                                              self.last_exchange, round_number, self.total_rounds)
-        try:
-            question = generate_question(self.client, system, user)
-        except ClaudeError as e:
-            self.log.event("question_generation_failed", round=round_number, error=str(e))
-            raise QuestionError(str(e)) from None
+        if self.bank:
+            question, details = self.bank.pick(self.scenario.id, mode.id, self.config.default_mode,
+                                               self.state, self.questions, self.rng)
+            request = {"source": "bank", **details}
+            if details["fallback"]:
+                self.log.event("bank_fallback", round=round_number, detail=details["fallback"])
+        else:
+            system, user = build_question_request(self.config, mode, self.state, self.scenario, self.questions,
+                                                  self.last_exchange, round_number, self.total_rounds)
+            request = {"source": "llm", "system": system, "user": user}
+            try:
+                question = generate_question(self.client, system, user)
+            except ClaudeError as e:
+                self.log.event("question_generation_failed", round=round_number, error=str(e))
+                raise QuestionError(str(e)) from None
         if not question:
             self.log.event("question_generation_failed", round=round_number, error="empty question")
             raise QuestionError("The model returned an empty question.")
@@ -68,7 +83,7 @@ class DiscussionSession:
             "asked_at": now(),
             "active_mode": mode.id,
             "state_used": self.state.to_dict(),
-            "question_request": {"system": system, "user": user},
+            "question_request": request,
             "question": question,
             "answer": None,
             "closing_remark": None,
