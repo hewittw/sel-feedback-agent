@@ -1,0 +1,46 @@
+"""Per-session JSON log, rewritten after every change so interruptions lose nothing."""
+import json
+import os
+from datetime import datetime, timezone
+from pathlib import Path
+
+
+def now() -> str:
+    return datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
+
+
+class SessionLog:
+    def __init__(self, logs_dir: Path, session_id: str, scenario, rounds: int, model: str | None):
+        logs_dir.mkdir(parents=True, exist_ok=True)
+        self.path = logs_dir / f"session_{session_id}.json"
+        self.data = {
+            "session_id": session_id,
+            "started_at": now(),
+            "ended_at": None,
+            "status": "in_progress",       # completed | ended_early | in_progress
+            "model": model,
+            "scenario": {"id": scenario.id, "title": scenario.title, "text": scenario.text},
+            "configured_rounds": rounds,
+            "rounds": [],
+            "events": [],                  # failures and other non-round events
+        }
+        self.save()
+
+    def new_round(self, entry: dict) -> dict:
+        self.data["rounds"].append(entry)
+        self.save()
+        return entry
+
+    def event(self, kind: str, **details):
+        self.data["events"].append({"time": now(), "type": kind, **details})
+        self.save()
+
+    def finish(self, status: str):
+        self.data["status"] = status
+        self.data["ended_at"] = now()
+        self.save()
+
+    def save(self):
+        tmp = self.path.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(self.data, indent=2, ensure_ascii=False), encoding="utf-8")
+        os.replace(tmp, self.path)

@@ -1,0 +1,10 @@
+{
+  "default_mode": "normal",
+  "modes": [
+    {"id": "normal", "description": "General discussion. No particular SEL focus; ask whatever moves the conversation forward.", "prompt_file": "normal.txt"},
+    {"id": "feelings", "description": "Identify how characters feel and explore the causes of those feelings.", "prompt_file": "feelings.txt"},
+    {"id": "perspective_taking", "description": "Consider another person's viewpoint, thoughts, or motivations.", "prompt_file": "perspective_taking.txt"},
+    {"id": "personal_experience", "description": "Connect the scenario to the parent's or child's own lives.", "prompt_file": "personal_experience.txt"},
+    {"id": "problem_solving", "description": "Explore possible actions a character could take and their consequences.", "prompt_file": "problem_solving.txt"}
+  ]
+}

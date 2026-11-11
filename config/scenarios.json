@@ -1,0 +1,19 @@
+{
+  "scenarios": [
+    {
+      "id": "left_out_game",
+      "title": "Left Out of the Game",
+      "text": "At recess, Maya walked over to a group of kids playing tag. She asked if she could join, but Leo said, \"We already have enough people.\" Maya watched from the bench while they kept playing. Later, she saw another kid join the game without asking. Maya didn't say anything, but she didn't want to go to recess the next day."
+    },
+    {
+      "id": "friend_disagreement",
+      "title": "The Poster Disagreement",
+      "text": "Sam and Priya are best friends making a poster for the school fair. Sam wants to draw a big rocket ship, and Priya wants to draw the ocean. They argue until Priya says, \"Fine, do whatever you want,\" and stops helping. Sam finishes the rocket alone, but it doesn't feel as fun as he thought it would."
+    },
+    {
+      "id": "frustrated_teamwork",
+      "title": "The Tower That Kept Falling",
+      "text": "In class, Jordan's group had to build a tower out of paper cups. Every time it got tall, it fell over. After the third time, Jordan got frustrated, knocked the rest of the cups down, and said, \"This is stupid!\" His teammate Ava looked upset, and the group went quiet. The teacher said they had ten minutes left."
+    }
+  ]
+}
